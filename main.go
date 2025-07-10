@@ -8,11 +8,11 @@ import (
 )
 
 func handleBlablaGet(w http.ResponseWriter, r *http.Request) {
-	generic.Respond(w, "GET blabla")
+	generic.RespondJson(w, "GET blabla")
 }
 
 func handleBlablaPost(w http.ResponseWriter, r *http.Request) {
-	generic.Respond(w, "POST blabla")
+	generic.RespondJson(w, "POST blabla")
 }
 
 func main() {
