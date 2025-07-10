@@ -1,19 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
-	"os"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/jwbogit/test/generic"
 )
 
+func handleBlablaGet(w http.ResponseWriter, r *http.Request) {
+	generic.Respond(w, "GET blabla")
+}
+
+func handleBlablaPost(w http.ResponseWriter, r *http.Request) {
+	generic.Respond(w, "POST blabla")
+}
+
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		testVar := os.Getenv("testVar")
-		fmt.Fprintln(w, "Hello, world! "+testVar)
+	r := chi.NewRouter()
+
+	r.Route("/blablabla", func(r chi.Router) {
+		r.Get("/", handleBlablaGet)
+		r.Post("/", handleBlablaPost)
 	})
 
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic(err)
-	}
+	http.ListenAndServe(":8080", r)
 }
