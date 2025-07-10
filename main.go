@@ -1,27 +1,47 @@
 package main
 
 import (
-	"net/http"
+	"log"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/jwbogit/test/generic"
 )
 
-func handleBlablaGet(w http.ResponseWriter, r *http.Request) {
-	generic.RespondJson(w, "GET blabla")
+// ================================================================================================
+// GENERIC API
+// ================================================================================================
+
+var api = generic.API{
+	Port: 8080,
+	Routes: []generic.Route{
+		{
+			Path: "/hello/{customerId}",
+			GET:  handleHelloCustomerId,
+		},
+	},
+	DefaultHeaders: map[string]string{"hello": "world"},
 }
 
-func handleBlablaPost(w http.ResponseWriter, r *http.Request) {
-	generic.RespondJson(w, "POST blabla")
+// ================================================================================================
+// HANDLERS
+// ================================================================================================
+
+func handleHelloCustomerId(req generic.Request) generic.Response {
+	customerId := req.URLParams["customerId"]
+
+	return generic.Response{
+		Headers: map[string]string{
+			"X-Greeting": customerId,
+		},
+		Body: map[string]string{
+			"message": "Hello from clean handler to " + customerId + "!",
+		},
+	}
 }
+
+// ================================================================================================
+// START
+// ================================================================================================
 
 func main() {
-	r := chi.NewRouter()
-
-	r.Route("/blablabla", func(r chi.Router) {
-		r.Get("/", handleBlablaGet)
-		r.Post("/", handleBlablaPost)
-	})
-
-	http.ListenAndServe(":8080", r)
+	log.Fatal(api.Start())
 }
